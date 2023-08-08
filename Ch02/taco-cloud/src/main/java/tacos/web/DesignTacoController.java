@@ -49,6 +49,7 @@ public class DesignTacoController {
 	private List<Ingredient> filterByType(
 			List<Ingredient> ingredients, Type type) {
 		return ingredients
+		        //.ParallelStream
 				.stream()
 				.filter(x -> x.getType().equals(type))
 				.collect(Collectors.toList());
