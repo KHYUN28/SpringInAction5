@@ -31,8 +31,10 @@ public class JdbcTacoRepository implements TacoRepository {
 		return taco;
 	}
 	
+	//타코 경로를 데이터 베이스에 저장, Taco Save에서 호출
 	private long saveTacoInfo(Taco taco) {
 		taco.setCreatedAt(new Date());
+		// PreparedStatementCreator 함수형 인터페이스
 		PreparedStatementCreator psc =
 				new PreparedStatementCreatorFactory(
 						"insert into Taco (name, createdAt) values (?, ?)",
@@ -41,17 +43,20 @@ public class JdbcTacoRepository implements TacoRepository {
 								Arrays.asList(
 										taco.getName(),
 										new Timestamp(taco.getCreatedAt().getTime())));
+		                                //(?, ?) 여기에 대입, 바인딩
 		
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbc.update(psc, keyHolder);
 		return keyHolder.getKey().longValue();
 	}
 	
+	// Taco_Ingredients에 insert 해서 업데이트 
 	private void saveIngredientToTaco(
 			Ingredient ingredient, long tacoId) {
 		jdbc.update(
 				"insert into Taco_Ingredients (taco, ingredient) " +
 						"values (?, ?)",
 						tacoId, ingredient.getId());
+		                                   //getId() = String
 	}
 }

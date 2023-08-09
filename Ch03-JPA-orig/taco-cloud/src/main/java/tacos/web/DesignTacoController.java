@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 @Slf4j
 @Controller
 @RequestMapping("/design")
-@SessionAttributes("order") // 저장 공간 : session(서블릿 컨텍스트)
+@SessionAttributes("order")
 public class DesignTacoController {
 	private final IngredientRepository ingredientRepo;
 	
@@ -41,7 +41,7 @@ public class DesignTacoController {
 	public String showDesignForm(Model model) {
 		List<Ingredient> ingredients = new ArrayList<>();
 		ingredientRepo.findAll().forEach(i -> ingredients.add(i));
-		                         // accept의 바디를 구현
+		
 		Type[] types = Ingredient.Type.values();
 		for (Type type : types) {
 			model.addAttribute(type.toString().toLowerCase(),
@@ -61,13 +61,11 @@ public class DesignTacoController {
 				.collect(Collectors.toList());
 	}
 	
-	//해당 속성이 없는 경우 모델에서 찾게 됨.
 	@ModelAttribute(name = "order")
 	public Order order() {
 		return new Order();
 	}
 	
-	// 이 값은 모든 뷰에서 "taco" 속성으로 접근 가능
 	@ModelAttribute(name = "taco")
 	public Taco taco() {
 		return new Taco();
@@ -81,8 +79,6 @@ public class DesignTacoController {
 		
 		Taco saved = tacoRepo.save(design);
 		order.addDesign(saved);
-		
-//		log.info("order :" + order);
 		
 		return "redirect:/orders/current";
 	}

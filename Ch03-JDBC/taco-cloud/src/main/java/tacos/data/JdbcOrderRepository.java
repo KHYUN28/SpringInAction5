@@ -43,14 +43,17 @@ public class JdbcOrderRepository implements OrderRepository {
 		return order;
 	}
 	
+	// "insert into Taco_Order (placedAt, deliveryName, deliveryStreet,deliveryCity, 
+	//  delivertyState, deliveryZip, ccNumber,ccExpiration,ccCVV)) Value (?,?,?,?,?,?,?,?,?)
 	private long saveOrderDetails(Order order) {
 		@SuppressWarnings("unchecked")
 		Map<String, Object> values =
 		objectMapper.convertValue(order, Map.class);
+		// Map = Collection / Map<String, Object> values : key, Value
 		values.put("placedAt", order.getPlacedAt());
 		long orderId =
 				orderInserter
-				.executeAndReturnKey(values)
+				.executeAndReturnKey(values) //Query 실행
 				.longValue();
 		return orderId;
 	}
